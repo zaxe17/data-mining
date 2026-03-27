@@ -79,7 +79,7 @@ const Map = () => {
 									))}
 								</div>
 
-								<button className="w-full bg-[#2B6B5A] text-white text-sm py-3 rounded-md mt-6">
+								<button className="w-full bg-[#2B6B5A] text-white text-sm py-3 rounded-md mt-6 transition-all duration-200 ease-linear hover:bg-[#10B981]">
 									Apply Filters
 								</button>
 							</Container>
