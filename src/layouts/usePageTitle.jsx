@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
 
-const PageTitle = (page) => {
+const usePageTitle = (page) => {
 	useEffect(() => {
 		document.title = `DATA MINING - ${page}`;
-	});
+		window.scrollTo(0, 0);
+	}, [page]);
 };
 
-export default PageTitle;
+export default usePageTitle;

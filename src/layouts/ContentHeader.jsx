@@ -1,4 +1,5 @@
 import { Icon } from "@iconify/react";
+import { motion } from "framer-motion";
 
 const ContentHeader = ({ headingTitle, desc, path }) => {
 	let buttonLabel, buttonIcon;
@@ -16,7 +17,16 @@ const ContentHeader = ({ headingTitle, desc, path }) => {
 
 	return (
 		<div className="flex justify-between items-start">
-			<div className="flex flex-col">
+			<motion.div
+				initial={{ opacity: 0, y: 20 }}
+				whileInView={{ opacity: 1, y: 0 }}
+				viewport={{ once: false }}
+				transition={{
+					delay: 0.4,
+					duration: 0.3,
+					ease: "easeOut",
+				}}
+				className="flex flex-col">
 				<h1
 					className="text-[#1E293B] text-[28px] font-bold"
 					style={{
@@ -31,9 +41,18 @@ const ContentHeader = ({ headingTitle, desc, path }) => {
 					}}>
 					{desc}
 				</p>
-			</div>
+			</motion.div>
 
-			<div className="flex gap-3">
+			<motion.div
+				initial={{ opacity: 0, y: 20 }}
+				whileInView={{ opacity: 1, y: 0 }}
+				viewport={{ once: false }}
+				transition={{
+					delay: 0.6,
+					duration: 0.3,
+					ease: "easeOut",
+				}}
+				className="flex gap-3">
 				<button
 					className="text-black text-sm font-medium flex items-center gap-1 bg-white rounded-md py-2 px-4"
 					style={{
@@ -55,7 +74,7 @@ const ContentHeader = ({ headingTitle, desc, path }) => {
 						Download Report
 					</button>
 				)}
-			</div>
+			</motion.div>
 		</div>
 	);
 };

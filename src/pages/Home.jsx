@@ -1,12 +1,14 @@
+import { Icon } from "@iconify/react";
+import { motion } from "framer-motion";
+
 import Header from "../layouts/Header";
 import headerImg from "../assets/homepage.png";
 import StatCard from "../layouts/StatCard";
 import TabCard from "../layouts/TabCard";
-import PageTitle from "../layouts/PageTitle";
-import { Icon } from "@iconify/react";
+import usePageTitle from "../layouts/usePageTitle";
 
 const Home = () => {
-	PageTitle("Home");
+	usePageTitle("Home");
 	const statusCards = [
 		{
 			icon: "f7:house-fill",
@@ -76,45 +78,82 @@ const Home = () => {
 				/>
 
 				{/* STATUS CARDS */}
-				<div className="w-full absolute bottom-0 translate-y-1/2 flex justify-center items-center gap-11.25">
+				<div className="w-full absolute bottom-0 translate-y-1/2 flex justify-center items-center gap-11.25 z-10">
 					{statusCards.map((statCard, i) => (
-						<div key={i}>
+						<motion.div
+							key={i}
+							initial={{ y: 20, scale: 1.05, opacity: 0 }}
+							animate={{ y: 0, scale: 1, opacity: 1 }}
+							transition={{
+								delay: i * 0.2,
+								duration: 0.3,
+								ease: "easeOut",
+							}}>
 							<StatCard
-								key={i}
 								icon={statCard.icon}
 								iconSize={23}
 								iconColor="#DD7F3C"
 								count={statCard.count}
 								text={statCard.text}
 							/>
-						</div>
+						</motion.div>
 					))}
 				</div>
 			</div>
 
 			<div className="w-full mt-30.5 pb-17.75 text-center">
 				{/* HEADING */}
-				<h1 className="text-2xl font-bold mb-6">
+				<motion.h1
+					initial={{ opacity: 0, y: 20 }}
+					whileInView={{ opacity: 1, y: 0 }}
+					viewport={{ once: false }}
+					transition={{
+						delay: 0.6,
+						duration: 0.3,
+						ease: "easeOut",
+					}}
+					className="text-2xl font-bold mb-6">
 					Everything You Need to Decide
-				</h1>
+				</motion.h1>
+
 				{/* SUBHEADING */}
-				<p className="text-[#B5AFAF] text-sm font-medium">
+				<motion.p
+					initial={{ opacity: 0, y: 20 }}
+					whileInView={{ opacity: 1, y: 0 }}
+					viewport={{ once: false }}
+					transition={{
+						delay: 0.3,
+						duration: 0.3,
+						ease: "easeOut",
+					}}
+					className="text-[#B5AFAF] text-sm font-medium">
 					From personalized calculations to interactive maps and deep
 					data analysis —<br />
 					all in one place.
-				</p>
+				</motion.p>
 
 				{/* TAB CARDS */}
 				<div className="flex justify-center items-center gap-18.25 mt-11">
 					{tabCards.map((tabCard, i) => (
-						<TabCard
-							icon={tabCard.icon}
-							iconSize={30}
-							iconColor="white"
-							heading={tabCard.heading}
-							text={tabCard.text}
-							route={tabCard.route}
-						/>
+						<motion.div
+							key={i}
+							initial={{ opacity: 0, y: 20 }}
+							whileInView={{ opacity: 1, y: 0 }}
+							viewport={{ once: false }}
+							transition={{
+								delay: i * 0.2,
+								duration: 0.3,
+								ease: "easeOut",
+							}}>
+							<TabCard
+								icon={tabCard.icon}
+								iconSize={30}
+								iconColor="white"
+								heading={tabCard.heading}
+								text={tabCard.text}
+								route={tabCard.route}
+							/>
+						</motion.div>
 					))}
 				</div>
 			</div>

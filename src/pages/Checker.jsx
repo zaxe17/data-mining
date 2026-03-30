@@ -1,4 +1,7 @@
+import { useLocation } from "react-router-dom";
 import { Icon } from "@iconify/react";
+import { motion } from "framer-motion";
+
 import Header from "../layouts/Header";
 import headerImg from "../assets/checker.png";
 import Maps from "../layouts/Maps";
@@ -6,13 +9,11 @@ import AffordabilityCalculator from "../layouts/AffordabilityCalculator";
 import Cards from "../layouts/Cards";
 import Container from "../layouts/Container";
 import ContentHeader from "../layouts/ContentHeader";
-import { useLocation } from "react-router-dom";
 import RangeInput from "../layouts/RangeInput";
-import PageTitle from "../layouts/PageTitle";
-
+import usePageTitle from "../layouts/usePageTitle";
 
 const Checker = () => {
-	PageTitle("Checker");
+	usePageTitle("Checker");
 
 	const location = useLocation();
 
@@ -114,35 +115,85 @@ const Checker = () => {
 					{/* LEFT CONTAINER */}
 					<div className="w-1/2 flex flex-col gap-6">
 						{/* Affordability Calculator */}
-						<AffordabilityCalculator
-							inputFields={inputFields}
-							selectFields={selectFields}
-							options={options}
-						/>
+						<motion.div
+							initial={{ opacity: 0, y: 20 }}
+							whileInView={{ opacity: 1, y: 0 }}
+							viewport={{ once: false }}
+							transition={{
+								delay: 0.6,
+								duration: 0.3,
+								ease: "easeOut",
+							}}>
+							<AffordabilityCalculator
+								inputFields={inputFields}
+								selectFields={selectFields}
+								options={options}
+							/>
+						</motion.div>
 
 						{/* MAP PROPS */}
-						<Maps legends={legends} height={300} />
+						<motion.div
+							initial={{ opacity: 0, y: 20 }}
+							whileInView={{ opacity: 1, y: 0 }}
+							viewport={{ once: false }}
+							transition={{
+								delay: 0.1,
+								duration: 0.3,
+								ease: "easeOut",
+							}}>
+							<Maps legends={legends} height={300} />
+						</motion.div>
 					</div>
 
 					{/* RIGHT CONTAINER */}
 					<div className="w-1/2 flex flex-col gap-6">
 						{/* CARDS PROPS */}
 						<div className="flex items-center gap-6">
-							<Cards
-								heading="Max Property Price"
-								content="₱ 3.2M"
-								text="Affordable Range"
-								colorTheme="green"
-							/>
-							<Cards
-								heading="Est. Monthly Mortgage"
-								content="₱ 18,500"
-								text="Based on 20-year term"
-							/>
+							<motion.div
+								initial={{ opacity: 0, y: 20 }}
+								whileInView={{ opacity: 1, y: 0 }}
+								viewport={{ once: false }}
+								transition={{
+									delay: 0.7,
+									duration: 0.3,
+									ease: "easeOut",
+								}}
+								className="flex-1">
+								<Cards
+									heading="Max Property Price"
+									content="₱ 3.2M"
+									text="Affordable Range"
+									colorTheme="green"
+								/>
+							</motion.div>
+							<motion.div
+								initial={{ opacity: 0, y: 20 }}
+								whileInView={{ opacity: 1, y: 0 }}
+								viewport={{ once: false }}
+								transition={{
+									delay: 0.8,
+									duration: 0.3,
+									ease: "easeOut",
+								}}
+								className="flex-1">
+								<Cards
+									heading="Est. Monthly Mortgage"
+									content="₱ 18,500"
+									text="Based on 20-year term"
+								/>
+							</motion.div>
 						</div>
 
 						{/* DESCRIPTION */}
-						<div
+						<motion.div
+							initial={{ opacity: 0, y: 20 }}
+							whileInView={{ opacity: 1, y: 0 }}
+							viewport={{ once: false }}
+							transition={{
+								delay: 0.9,
+								duration: 0.3,
+								ease: "easeOut",
+							}}
 							className="w-full bg-[#FFFFFF] rounded-lg p-6 flex items-start gap-4"
 							style={{
 								boxShadow:
@@ -163,56 +214,76 @@ const Checker = () => {
 									districts.
 								</p>
 							</div>
-						</div>
+						</motion.div>
 
 						{/* WHAT IF SCENARIO CONTAINER */}
-						<Container
-							icon="mingcute:settings-2-line"
-							iconColor="#2563EB"
-							headingText="What-If Scenario"
-							button={false}>
-							<p className="text-sm text-[#64748B] mt-3 mb-5">
-								Adjust variables to see how your affordability
-								changes.
-							</p>
-
-							<RangeInput
-								label="Income Increase"
-								value={10000}
-								max={60000}
-							/>
-
-							<div className="bg-[#2B6B5A] p-4 rounded-md mt-3">
-								<p className="text-white text-sm font-bold">
-									Outcome: If your income increases to
-									₱70,000/month, you could afford premium
-									properties in Ermita.
+						<motion.div
+							initial={{ opacity: 0, y: 20 }}
+							whileInView={{ opacity: 1, y: 0 }}
+							viewport={{ once: false }}
+							transition={{
+								delay: 0.2,
+								duration: 0.3,
+								ease: "easeOut",
+							}}>
+							<Container
+								icon="mingcute:settings-2-line"
+								iconColor="#2563EB"
+								headingText="What-If Scenario"
+								button={false}>
+								<p className="text-sm text-[#64748B] mt-3 mb-5">
+									Adjust variables to see how your
+									affordability changes.
 								</p>
-							</div>
-						</Container>
+
+								<RangeInput
+									label="Income Increase"
+									value={10000}
+									max={60000}
+								/>
+
+								<div className="bg-[#2B6B5A] p-4 rounded-md mt-3">
+									<p className="text-white text-sm font-bold">
+										Outcome: If your income increases to
+										₱70,000/month, you could afford premium
+										properties in Ermita.
+									</p>
+								</div>
+							</Container>
+						</motion.div>
 
 						{/* HOUSING ASSISTANCE */}
-						<Container
-							icon="mingcute:house-line"
-							iconColor="#16A34A"
-							headingText="Housing Assistance"
-							button={false}>
-							<p className="text-sm text-[#64748B] mt-3">
-								Recommended programs based on your profile.
-							</p>
+						<motion.div
+							initial={{ opacity: 0, y: 20 }}
+							whileInView={{ opacity: 1, y: 0 }}
+							viewport={{ once: false }}
+							transition={{
+								delay: 0.3,
+								duration: 0.3,
+								ease: "easeOut",
+							}}>
+							<Container
+								icon="mingcute:house-line"
+								iconColor="#16A34A"
+								headingText="Housing Assistance"
+								button={false}>
+								<p className="text-sm text-[#64748B] mt-3">
+									Recommended programs based on your profile.
+								</p>
 
-							<div className="flex flex-col gap-3.5 mt-3">
-								{recomProgs.map((recomProg, i) => (
-									<div key={i}>
-										{houseAssist(
-											recomProg.icon,
-											recomProg.heading,
-											recomProg.desc,
-										)}
-									</div>
-								))}
-							</div>
-						</Container>
+								<div className="flex flex-col gap-3.5 mt-3">
+									{recomProgs.map((recomProg, i) => (
+										<div key={i}>
+											{houseAssist(
+												recomProg.icon,
+												recomProg.heading,
+												recomProg.desc,
+											)}
+										</div>
+									))}
+								</div>
+							</Container>
+						</motion.div>
 					</div>
 				</div>
 			</div>

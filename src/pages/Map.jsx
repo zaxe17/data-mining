@@ -1,14 +1,16 @@
+import { useLocation } from "react-router-dom";
+import { motion } from "framer-motion";
+
 import Header from "../layouts/Header";
 import headerImg from "../assets/map.png";
 import ContentHeader from "../layouts/ContentHeader";
-import { useLocation } from "react-router-dom";
 import Container from "../layouts/Container";
 import RangeInput from "../layouts/RangeInput";
 import Select from "../layouts/Select";
-import PageTitle from "../layouts/PageTitle";
+import usePageTitle from "../layouts/usePageTitle";
 
 const Map = () => {
-	PageTitle("Map");
+	usePageTitle("Map");
 
 	const location = useLocation();
 
@@ -16,12 +18,6 @@ const Map = () => {
 		{ label: "Property Type", value: "" },
 		{ label: "Distance from City Center", value: "" },
 		{ label: "Affordability Status", value: "" },
-	];
-
-	const legends = [
-		{ label: "Highly Affordable", color: "#22C55E" },
-		{ label: "Below Budget", color: "#F59E0B" },
-		{ label: "Slightly Above Budget", color: "#9CA3AF" },
 	];
 
 	return (
@@ -51,7 +47,16 @@ const Map = () => {
 					<div
 						className="w-1/4 flex flex-col gap-6"
 						style={{ height: "740px" }}>
-						<div className="shrink-0">
+						<motion.div
+							initial={{ opacity: 0 }}
+							whileInView={{ opacity: 1 }}
+							viewport={{ once: false }}
+							transition={{
+								delay: 0.6,
+								duration: 0.3,
+								ease: "easeOut",
+							}}
+							className="shrink-0">
 							<Container
 								icon="cil:filter"
 								iconColor="#2563EB"
@@ -83,10 +88,19 @@ const Map = () => {
 									Apply Filters
 								</button>
 							</Container>
-						</div>
+						</motion.div>
 
 						{/* DISTRICTS WRAPPER */}
-						<div className="flex-1 min-h-0">
+						<motion.div
+							initial={{ opacity: 0, y: 20 }}
+							whileInView={{ opacity: 1, y: 0 }}
+							viewport={{ once: false }}
+							transition={{
+								delay: 0.6,
+								duration: 0.3,
+								ease: "easeOut",
+							}}
+							className="flex-1 min-h-0">
 							<Container
 								icon="ph:list-bullets"
 								iconColor="#2563EB"
@@ -111,12 +125,21 @@ const Map = () => {
 									</div>
 								</div>
 							</Container>
-						</div>
+						</motion.div>
 					</div>
 
 					{/* RIGHT CONTAINER */}
 					<div className="w-full flex flex-col gap-6">
-						<div className="w-full">
+						<motion.div
+							initial={{ opacity: 0 }}
+							whileInView={{ opacity: 1 }}
+							viewport={{ once: false }}
+							transition={{
+								delay: 0.7,
+								duration: 0.3,
+								ease: "easeOut",
+							}}
+							className="w-full">
 							<iframe
 								src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3663.602095603673!2d121.02911458227976!3d14.656680018140756!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397b7c7722bc6f1%3A0xdc87cf9ed19d652e!2sSM%20City%20North%20EDSA!5e1!3m2!1sen!2sph!4v1774013544416!5m2!1sen!2sph"
 								allowFullScreen
@@ -124,7 +147,7 @@ const Map = () => {
 								referrerPolicy="no-referrer-when-downgrade"
 								style={{ border: 0, height: `740px` }}
 								className="w-full rounded-md"></iframe>
-						</div>
+						</motion.div>
 					</div>
 				</div>
 			</div>

@@ -1,8 +1,8 @@
 import { Icon } from "@iconify/react";
-import PageTitle from "../layouts/PageTitle";
+import usePageTitle from "../layouts/usePageTitle";
 
 const About = () => {
-	PageTitle("About");
+	usePageTitle("About");
 
 	const tutorials = [
 		{

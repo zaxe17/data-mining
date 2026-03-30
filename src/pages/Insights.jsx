@@ -1,130 +1,60 @@
+import { useRef, useState } from "react";
+import { Icon } from "@iconify/react";
+import { useLocation } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+
 import Header from "../layouts/Header";
 import headerImg from "../assets/insights.png";
 import ContentHeader from "../layouts/ContentHeader";
-import { useLocation } from "react-router-dom";
 import Cards from "../layouts/Cards";
 import Container from "../layouts/Container";
 import Bars from "../layouts/graphs/Bars";
 import LineGraph from "../layouts/graphs/LineGraph";
 import ScatterGraph from "../layouts/graphs/ScatterGraph";
 import PieGraph from "../layouts/graphs/PieGraph";
-import { Icon } from "@iconify/react";
-import PageTitle from "../layouts/PageTitle";
+import usePageTitle from "../layouts/usePageTitle";
+import {
+	tabData,
+	barGraphs,
+	districtDatas,
+	reportItems,
+	insights,
+} from "../const";
 
 const Insights = () => {
-	PageTitle("Insights");
+	usePageTitle("Insights");
 
 	const location = useLocation();
 
-	const snapshots = [
-		{
-			heading: "Lowest average entry price",
-			value: "₱2.1M",
-			desc: "Tondo remains most affordable",
-			color: "green",
-		},
-		{
-			heading: "Highest buyer demand",
-			value: "Sampaloc",
-			desc: "Driven by schools, transit, and condo supply",
-			color: "",
-		},
-		{
-			heading: "Fastest 12-month price growth",
-			value: "+8.6%",
-			desc: "Malate and Ermita continue to rise fastest",
-			color: "",
-		},
-		{
-			heading: "Median affordable income band",
-			value: "₱48k+",
-			desc: "Typical threshold for central condo districts",
-			color: "",
-		},
-	];
+	const [activeTab, setActiveTab] = useState(0);
+	const [direction, setDirection] = useState(1);
+	const prevTab = useRef(0);
 
-	const barGraphs = [
-		{
-			label: "₱2.1M",
-			city: "Tondo",
-			color: "#F59E0B",
-			height: "75",
-		},
-		{
-			label: "₱2.8M",
-			city: "Binondo",
-			color: "#2B6B5A",
-			height: "99",
-		},
-		{
-			label: "₱3.0M",
-			city: "Quiapo",
-			color: "#06B6D4",
-			height: "106",
-		},
-		{
-			label: "₱3.2M",
-			city: "Sampaloc",
-			color: "#2B6B5A",
-			height: "114",
-		},
-		{
-			label: "₱3.9M",
-			city: "Malate",
-			color: "#06B6D4",
-			height: "138",
-		},
-		{
-			label: "₱4.3M",
-			city: "Ermita",
-			color: "#2B6B5A",
-			height: "154",
-		},
-		{
-			label: "₱4.9M",
-			city: "Intramuros",
-			color: "#06B6D4",
-			height: "174",
-		},
-	];
+	const handeClick = (i) => {
+		if (i === activeTab) return;
+		setDirection(i > prevTab.current ? 1 : -1);
+		prevTab.current = i;
+		setActiveTab(i);
+	};
 
-	const districtDatas = [
-		{ district: "Tondo", price: "₱2.1M", growth: "+3.2%" },
-		{ district: "Binondo", price: "₱2.8M", growth: "+4.5%" },
-		{ district: "Sampaloc", price: "₱3.2M", growth: "+6.8%" },
-		{ district: "Malate", price: "₱3.9M", growth: "+8.6%" },
-		{ district: "Ermita", price: "₱4.3M", growth: "+8.1%" },
-	];
-
-	const reportItems = [
-		{ label: "Income analysis", status: "Included" },
-		{ label: "Affordability score", status: "Included" },
-		{ label: "Suggested districts", status: "Included" },
-		{ label: "Map snapshot", status: "Included" },
-	];
-
-	const insights = [
-		{
-			icon: "streamline:graph-arrow-decrease",
-			iconColor: "#10B981",
-			heading: "Lowest housing prices",
-			desc: "Tondo, Paco, and Pandacan consistently show the lowest average for budget-focused households.",
+	const variants = {
+		enter: (dir) => ({
+			x: dir > 0 ? 60 : -60,
+			opacity: 0,
+		}),
+		center: {
+			x: 0,
+			opacity: 1,
+			transition: { duration: 0.32, ease: [0.32, 0.72, 0, 1] },
 		},
-		{
-			icon: "streamline:graph-arrow-increase",
-			iconColor: "#F59E0B",
-			heading: "Highest demand concentration",
-			desc: "Average prices across Manila continue to trend upward, with faster growth in central districts than in peripheral, lower-cost neighborhoods.",
-		},
-		{
-			icon: "mingcute:heartbeat-line",
-			iconColor: "#10B981",
-			heading: "Growth trend summary",
-			desc: "Average prices across Manila continue to trend upward, with faster growth in central districts than in peripheral, lower-cost neighborhoods.",
-		},
-	];
+		exit: (dir) => ({
+			x: dir > 0 ? -60 : 60,
+			opacity: 0,
+			transition: { duration: 0.22, ease: [0.32, 0.72, 0, 1] },
+		}),
+	};
 
-	const keyInsight = (icon, iconColor, heading, desc) => {
+	const KeyInsight = (icon, iconColor, heading, desc) => {
 		return (
 			<div className="bg-[#F1F5F9] rounded-md p-3.5 flex items-start gap-3">
 				<Icon
@@ -139,6 +69,35 @@ const Insights = () => {
 					<p className="text-[#6B7280] text-xs">{desc}</p>
 				</div>
 			</div>
+		);
+	};
+
+	const tabsButtonLabels = [
+		{ label: "Affordability Snapshot" },
+		{ label: "District Analytics" },
+		{ label: "Income Comparison" },
+		{ label: "Property Mix" },
+	];
+
+	const TabsButton = (label, i) => {
+		const [isHovered, setIsHovered] = useState(false);
+		const isActive = activeTab === i;
+
+		return (
+			<button
+				onClick={() => handeClick(i)}
+				onMouseEnter={() => setIsHovered(true)}
+				onMouseLeave={() => setIsHovered(false)}
+				className="py-2 px-3.5 rounded-xl border text-xs font-medium transition-all duration-200 ease-linear"
+				style={{
+					borderColor:
+						isActive || isHovered ? "#2B6B5A" : "rgba(0,0,0,0.08)",
+					backgroundColor:
+						isActive || isHovered ? "#2B6B5A" : "white",
+					color: isActive || isHovered ? "white" : "#0F1724",
+				}}>
+				{label}
+			</button>
 		);
 	};
 
@@ -177,241 +136,343 @@ const Insights = () => {
 					<div className="flex flex-col gap-6">
 						{/* BUTTON TABS */}
 						<div className="flex gap-2.5">
-							<button className="py-2 px-3.5 rounded-xl border border-black/8 text-[#0F1724] text-xs font-medium transition-all duration-200 ease-linear hover:bg-[#2B6B5A] hover:text-white">
-								Affordability Snapshot
-							</button>
-							<button className="py-2 px-3.5 rounded-xl border border-black/8 text-[#0F1724] text-xs font-medium transition-all duration-200 ease-linear hover:bg-[#2B6B5A] hover:text-white">
-								District Analytics
-							</button>
-							<button className="py-2 px-3.5 rounded-xl border border-black/8 text-[#0F1724] text-xs font-medium transition-all duration-200 ease-linear hover:bg-[#2B6B5A] hover:text-white">
-								Income Comparison
-							</button>
-							<button className="py-2 px-3.5 rounded-xl border border-black/8 text-[#0F1724] text-xs font-medium transition-all duration-200 ease-linear hover:bg-[#2B6B5A] hover:text-white">
-								Property Mix
-							</button>
+							{tabsButtonLabels.map((tabsButtonLabel, i) => (
+								<motion.div
+									initial={{ opacity: 0, y: 20 }}
+									whileInView={{ opacity: 1, y: 0 }}
+									viewport={{ once: false }}
+									transition={{
+										delay: i * 0.2,
+										duration: 0.3,
+										ease: "easeOut",
+									}}
+									key={i}>
+									{TabsButton(tabsButtonLabel.label, i)}
+								</motion.div>
+							))}
 						</div>
 
 						{/* RESULTS */}
-						<div className="flex items-center gap-4">
-							{snapshots.map((snapshot, i) => (
-								<Cards
-									key={i}
-									heading={snapshot.heading}
-									content={snapshot.value}
-									text={snapshot.desc}
-									colorTheme={snapshot.color}
-								/>
-							))}
-						</div>
+						<AnimatePresence mode="wait" custom={direction}>
+							<motion.div
+								key={activeTab}
+								custom={direction}
+								variants={variants}
+								initial="enter"
+								animate="center"
+								exit="exit"
+								className="flex items-center gap-4">
+								{tabData[activeTab].snapshots.map(
+									(snapshot, i) => (
+										<motion.div
+											key={i}
+											initial={{ opacity: 0, y: 20 }}
+											whileInView={{ opacity: 1, y: 0 }}
+											viewport={{ once: false }}
+											transition={{
+												delay: i * 0.2,
+												duration: 0.6,
+												ease: "easeOut",
+											}}
+											className="flex-1">
+											<Cards
+												heading={snapshot.heading}
+												content={snapshot.value}
+												text={snapshot.desc}
+												colorTheme={snapshot.color}
+											/>
+										</motion.div>
+									),
+								)}
+							</motion.div>
+						</AnimatePresence>
 					</div>
 
 					<div className="flex mt-6 gap-5">
 						{/* LEFT CONTENT */}
 						<div className="flex flex-col gap-5 w-2/3">
 							{/* BAR GRAPH */}
-							<Container
-								icon="mingcute:chart-vertical-line"
-								iconColor="#2B6B5A"
-								headingText="Average housing price by district"
-								button={false}>
-								<p className="text-xs text-[#6B7280] mb-4.5">
-									Comparing average asking prices across key
-									Manila districts.
-								</p>
+							<motion.div
+								initial={{ opacity: 0, y: 20 }}
+								whileInView={{ opacity: 1, y: 0 }}
+								viewport={{ once: false }}
+								transition={{
+									delay: 0.2,
+									duration: 0.3,
+									ease: "easeOut",
+								}}>
+								<Container
+									icon="mingcute:chart-vertical-line"
+									iconColor="#2B6B5A"
+									headingText="Average housing price by district"
+									button={false}>
+									<p className="text-xs text-[#6B7280] mb-4.5">
+										Comparing average asking prices across
+										key Manila districts.
+									</p>
 
-								{/* GRAPH */}
-								<div className="flex gap-2.5">
-									{barGraphs.map((barGraph, i) => (
-										<Bars
-											key={i}
-											label={barGraph.label}
-											city={barGraph.city}
-											color={barGraph.color}
-											height={barGraph.height}
-										/>
-									))}
-								</div>
+									{/* GRAPH */}
+									<div className="flex gap-2.5">
+										{barGraphs.map((barGraph, i) => (
+											<Bars
+												key={i}
+												label={barGraph.label}
+												city={barGraph.city}
+												color={barGraph.color}
+												height={barGraph.height}
+											/>
+										))}
+									</div>
 
-								{/* NOTE */}
-								<p className="bg-[#F1F5F9] text-xs rounded-md py-3 px-3.5 mt-4.5">
-									Insight: Tondo and Binondo offer the lowest
-									average housing prices, while heritage and
-									bay- adjacent districts like Intramuros and
-									Ermita command the highest pricing.
-								</p>
-							</Container>
+									{/* NOTE */}
+									<p className="bg-[#F1F5F9] text-xs rounded-md py-3 px-3.5 mt-4.5">
+										Insight: Tondo and Binondo offer the
+										lowest average housing prices, while
+										heritage and bay- adjacent districts
+										like Intramuros and Ermita command the
+										highest pricing.
+									</p>
+								</Container>
+							</motion.div>
 
 							{/* LINE GRAPH */}
-							<Container
-								icon="fa7-solid:chart-line"
-								iconColor="#2B6B5A"
-								headingText="Housing price trends over time"
-								button={false}>
-								<p className="text-xs text-[#6B7280] mb-4.5">
-									Median district price index from 2020 to
-									2025.
-								</p>
+							<motion.div
+								initial={{ opacity: 0, y: 20 }}
+								whileInView={{ opacity: 1, y: 0 }}
+								viewport={{ once: false }}
+								transition={{
+									delay: 0.4,
+									duration: 0.3,
+									ease: "easeOut",
+								}}>
+								<Container
+									icon="fa7-solid:chart-line"
+									iconColor="#2B6B5A"
+									headingText="Housing price trends over time"
+									button={false}>
+									<p className="text-xs text-[#6B7280] mb-4.5">
+										Median district price index from 2020 to
+										2025.
+									</p>
 
-								{/* GRAPH */}
-								<LineGraph />
+									{/* GRAPH */}
+									<LineGraph />
 
-								{/* NOTE */}
-								<p className="bg-[#F1F5F9] text-xs rounded-md py-3 px-3.5 mt-4.5">
-									Insight: Prime central districts are rising
-									faster than the city average, with notable
-									price acceleration after 2023 due to renewed
-									investor demand and transportation
-									improvements.
-								</p>
-							</Container>
+									{/* NOTE */}
+									<p className="bg-[#F1F5F9] text-xs rounded-md py-3 px-3.5 mt-4.5">
+										Insight: Prime central districts are
+										rising faster than the city average,
+										with notable price acceleration after
+										2023 due to renewed investor demand and
+										transportation improvements.
+									</p>
+								</Container>
+							</motion.div>
 
 							{/* SCATTER GRAPH */}
-							<Container
-								icon="tabler:zoom-scan"
-								iconColor="#2B6B5A"
-								headingText="Income vs housing affordability"
-								button={false}>
-								<p className="text-xs text-[#6B7280] mb-4.5">
-									Affordability clusters based on income and
-									estimated purchasable property value.
-								</p>
+							<motion.div
+								initial={{ opacity: 0, y: 20 }}
+								whileInView={{ opacity: 1, y: 0 }}
+								viewport={{ once: false }}
+								transition={{
+									delay: 0.4,
+									duration: 0.3,
+									ease: "easeOut",
+								}}>
+								<Container
+									icon="tabler:zoom-scan"
+									iconColor="#2B6B5A"
+									headingText="Income vs housing affordability"
+									button={false}>
+									<p className="text-xs text-[#6B7280] mb-4.5">
+										Affordability clusters based on income
+										and estimated purchasable property
+										value.
+									</p>
 
-								{/* GRAPH */}
-								<ScatterGraph />
+									{/* GRAPH */}
+									<ScatterGraph />
 
-								{/* NOTE */}
-								<p className="bg-[#F1F5F9] text-xs rounded-md py-3 px-3.5 mt-4.5">
-									Insight: Households in the ₱45k–₱65k range
-									unlock the broadest set of affordable condo
-									and apartment options, while detached house
-									affordability remains concentrated in
-									higher-income clusters.
-								</p>
-							</Container>
+									{/* NOTE */}
+									<p className="bg-[#F1F5F9] text-xs rounded-md py-3 px-3.5 mt-4.5">
+										Insight: Households in the ₱45k–₱65k
+										range unlock the broadest set of
+										affordable condo and apartment options,
+										while detached house affordability
+										remains concentrated in higher-income
+										clusters.
+									</p>
+								</Container>
+							</motion.div>
 						</div>
 
 						{/* RIGHT CONTENT */}
 						<div className="flex flex-col gap-5 w-1/2">
 							{/* PIE GRAPH */}
-							<Container
-								icon="lsicon:pie-one-outline"
-								iconColor="#2B6B5A"
-								headingText="Property type distribution"
-								button={false}>
-								<p className="text-xs text-[#6B7280] mb-4.5">
-									Share of listings and analyzed records by
-									property type.
-								</p>
+							<motion.div
+								initial={{ opacity: 0, y: 20 }}
+								whileInView={{ opacity: 1, y: 0 }}
+								viewport={{ once: false }}
+								transition={{
+									delay: 0.3,
+									duration: 0.3,
+									ease: "easeOut",
+								}}>
+								<Container
+									icon="lsicon:pie-one-outline"
+									iconColor="#2B6B5A"
+									headingText="Property type distribution"
+									button={false}>
+									<p className="text-xs text-[#6B7280] mb-4.5">
+										Share of listings and analyzed records
+										by property type.
+									</p>
 
-								{/* GRAPH */}
-								<PieGraph />
+									{/* GRAPH */}
+									<PieGraph />
 
-								{/* NOTE */}
-								<p className="bg-[#F1F5F9] text-xs rounded-md py-3 px-3.5 mt-4.5">
-									Insight: Condominiums make up the largest
-									share of listings in Manila, reflecting
-									strong urban demand and better affordability
-									for first-time buyers compared with houses
-									in central districts.
-								</p>
-							</Container>
+									{/* NOTE */}
+									<p className="bg-[#F1F5F9] text-xs rounded-md py-3 px-3.5 mt-4.5">
+										Insight: Condominiums make up the
+										largest share of listings in Manila,
+										reflecting strong urban demand and
+										better affordability for first-time
+										buyers compared with houses in central
+										districts.
+									</p>
+								</Container>
+							</motion.div>
 
 							{/* KEY INSIGHT */}
-							<Container
-								icon="octicon:light-bulb-16"
-								iconColor="#2B6B5A"
-								headingText="Key insights"
-								button={false}>
-								<p className="text-xs text-[#6B7280] mb-4.5">
-									Short takeaways from the latest data
-									exploration.
-								</p>
+							<motion.div
+								initial={{ opacity: 0, y: 20 }}
+								whileInView={{ opacity: 1, y: 0 }}
+								viewport={{ once: false }}
+								transition={{
+									delay: 0.5,
+									duration: 0.3,
+									ease: "easeOut",
+								}}>
+								<Container
+									icon="octicon:light-bulb-16"
+									iconColor="#2B6B5A"
+									headingText="Key insights"
+									button={false}>
+									<p className="text-xs text-[#6B7280] mb-4.5">
+										Short takeaways from the latest data
+										exploration.
+									</p>
 
-								{/* INSIGHTS CONTAINER */}
-								<div className="flex flex-col gap-3">
-									{insights.map((insight, i) => (
-										<div key={i}>
-											{keyInsight(
-												insight.icon,
-												insight.iconColor,
-												insight.heading,
-												insight.desc,
+									{/* INSIGHTS CONTAINER */}
+									<div className="flex flex-col gap-3">
+										{insights.map((insight, i) => (
+											<div key={i}>
+												{KeyInsight(
+													insight.icon,
+													insight.iconColor,
+													insight.heading,
+													insight.desc,
+												)}
+											</div>
+										))}
+									</div>
+								</Container>
+							</motion.div>
+
+							{/* DISTRICT SUMMARY */}
+							<motion.div
+								initial={{ opacity: 0, y: 20 }}
+								whileInView={{ opacity: 1, y: 0 }}
+								viewport={{ once: false }}
+								transition={{
+									delay: 0.3,
+									duration: 0.3,
+									ease: "easeOut",
+								}}>
+								<Container
+									icon="mynaui:filter-solid"
+									iconColor="#2B6B5A"
+									headingText="District summary"
+									button={false}>
+									<p className="text-xs text-[#6B7280] mb-4.5">
+										Quick comparison of selected districts.
+									</p>
+
+									<table className="w-full">
+										{/* BODY */}
+										<tbody>
+											{districtDatas.map(
+												(districtData, i) => (
+													<tr
+														key={i}
+														className="border-b border-b-black/8 last:border-0">
+														<td className="text-[#0F1724] text-sm font-medium text-left py-2.5">
+															{
+																districtData.district
+															}
+														</td>
+														<td className="text-[#6B7280] text-sm text-right py-2.5">
+															{districtData.price}
+														</td>
+														<td className="text-[#6B7280] text-sm text-right py-2.5">
+															{
+																districtData.growth
+															}
+														</td>
+													</tr>
+												),
 											)}
-										</div>
-									))}
-								</div>
-							</Container>
+										</tbody>
+									</table>
+								</Container>
+							</motion.div>
 
-							{/* DISTRICT SUMMARY */}
-							<Container
-								icon="mynaui:filter-solid"
-								iconColor="#2B6B5A"
-								headingText="District summary"
-								button={false}>
-								<p className="text-xs text-[#6B7280] mb-4.5">
-									Quick comparison of selected districts.
-								</p>
+							{/* DOWNLOAD PDF */}
+							<motion.div
+								initial={{ opacity: 0, y: 20 }}
+								whileInView={{ opacity: 1, y: 0 }}
+								viewport={{ once: false }}
+								transition={{
+									delay: 0.5,
+									duration: 0.3,
+									ease: "easeOut",
+								}}>
+								<Container
+									icon="fluent:document-data-32-regular"
+									iconColor="#2B6B5A"
+									headingText="Exportable report includes"
+									button={false}>
+									<p className="text-xs text-[#6B7280] mb-4.5">
+										Ready for PDF summary and stakeholder
+										review.
+									</p>
 
-								<table className="w-full">
-									{/* BODY */}
-									<tbody>
-										{districtDatas.map(
-											(districtData, i) => (
-												<tr
-													key={i}
-													className="border-b border-b-black/8 last:border-0">
-													<td className="text-[#0F1724] text-sm font-medium text-left py-2.5">
-														{districtData.district}
-													</td>
-													<td className="text-[#6B7280] text-sm text-right py-2.5">
-														{districtData.price}
-													</td>
-													<td className="text-[#6B7280] text-sm text-right py-2.5">
-														{districtData.growth}
-													</td>
-												</tr>
-											),
-										)}
-									</tbody>
-								</table>
-							</Container>
+									<div className="bg-[#F1F5F9] rounded-md p-4 flex flex-col gap-3">
+										{reportItems.map((reportItem, i) => (
+											<div
+												key={i}
+												className="flex justify-between text-sm">
+												<p className="text-[#0F1724]">
+													{reportItem.label}
+												</p>
+												<span className="text-[#0F1724] font-bold">
+													{reportItem.status}
+												</span>
+											</div>
+										))}
+									</div>
 
-							{/* DISTRICT SUMMARY */}
-							<Container
-								icon="fluent:document-data-32-regular"
-								iconColor="#2B6B5A"
-								headingText="Exportable report includes"
-								button={false}>
-								<p className="text-xs text-[#6B7280] mb-4.5">
-									Ready for PDF summary and stakeholder
-									review.
-								</p>
-
-								<div className="bg-[#F1F5F9] rounded-md p-4 flex flex-col gap-3">
-									{reportItems.map((reportItem, i) => (
-										<div
-											key={i}
-											className="flex justify-between text-sm">
-											<p className="text-[#0F1724]">
-												{reportItem.label}
-											</p>
-											<span className="text-[#0F1724] font-bold">
-												{reportItem.status}
-											</span>
-										</div>
-									))}
-								</div>
-
-								<button
-									type="submit"
-									className="w-full flex justify-center items-center gap-2 py-3 px-2.5 bg-[#2B6B5A] rounded-md text-base text-white mt-5 transition-all duration-200 ease-linear hover:bg-[#10B981]">
-									<Icon
-										icon="fa-solid:file-download"
-										className="w-5 h-5 text-white"
-									/>
-									Generate PDF Report
-								</button>
-							</Container>
+									<button
+										type="submit"
+										className="w-full flex justify-center items-center gap-2 py-3 px-2.5 bg-[#2B6B5A] rounded-md text-base text-white mt-5 transition-all duration-200 ease-linear hover:bg-[#10B981]">
+										<Icon
+											icon="fa-solid:file-download"
+											className="w-5 h-5 text-white"
+										/>
+										Generate PDF Report
+									</button>
+								</Container>
+							</motion.div>
 						</div>
 					</div>
 				</div>
